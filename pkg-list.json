@@ -1,0 +1,10 @@
+{
+    "pkgs": [
+    "shells/bash",
+    "devel/git",
+    "devel/gmake",
+    "www/node8",
+    "www/npm-node8",
+    "lang/python27"
+    ]
+} 
