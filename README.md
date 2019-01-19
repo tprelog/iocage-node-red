@@ -8,7 +8,7 @@ Artifact file(s) for [Node-RED](https://nodered.org/)
 
 **Download plugin and install**
 
-    wget -O /tmp/node-red.json https://raw.githubusercontent.com/tprelog/iocage-node-red.git/master/node-red.json
+    wget -O /tmp/node-red.json https://raw.githubusercontent.com/tprelog/iocage-node-red/master/node-red.json
     sudo iocage fetch -P dhcp=on vnet=on bpf=yes -n /tmp/node-red.json --branch 'master'
 
 ---
@@ -19,7 +19,7 @@ Artifact file(s) for [Node-RED](https://nodered.org/)
 
 **Download pkg-list and create a jail using it to install requirements**
 
-    wget -O /tmp/pkglist.json https://raw.githubusercontent.com/tprelog/iocage-node-red.git/master/pkg-list.json
+    wget -O /tmp/pkglist.json https://raw.githubusercontent.com/tprelog/iocage-node-red/master/pkg-list.json
     sudo iocage create -r 11.2-RELEASE boot=on dhcp=on bpf=yes vnet=on -p /tmp/pkglist.json -n node-red
 
 **Git script and install**
