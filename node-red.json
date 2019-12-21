@@ -1,5 +1,5 @@
 {
-  "name": "node-red",                                                             
+  "name": "node-red",
   "release": "11.2-RELEASE",
   "artifact": "https://github.com/tprelog/iocage-node-red.git", 
   "properties": { 
