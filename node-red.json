@@ -1,15 +1,17 @@
 {
   "name": "node-red",
-  "release": "11.2-RELEASE",
-  "artifact": "https://github.com/tprelog/iocage-node-red.git", 
+  "release": "11.3-RELEASE",
+  "artifact": "https://github.com/tprelog/iocage-node-red.git",
+  "official": "false",
   "properties": { 
-    "allow_raw_sockets":"1"
+    "allow_raw_sockets":"1",
+    "dhcp": "1"
   },
   "pkgs": [
     "shells/bash",
     "devel/gmake",
-    "www/node8",
-    "www/npm-node8",
+    "www/node10",
+    "www/npm-node10",
     "lang/python27"
   ],
   "packagesite": "http://pkg.FreeBSD.org/${ABI}/quarterly",
@@ -21,5 +23,5 @@
       }
     ]
   },
-  "official": false
+  "revision": "0"
 }

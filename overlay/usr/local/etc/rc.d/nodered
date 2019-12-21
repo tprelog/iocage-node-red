@@ -22,7 +22,7 @@
 #
 # chmod +x /usr/local/etc/rc.d/nodered
 # sysrc nodered_enable=yes                # to enable
-# service nodered start                   # to start       
+# service nodered start                   # to start
 
 . /etc/rc.subr
 name="nodered"
