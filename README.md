@@ -8,7 +8,7 @@ Artifact file(s) for [Node-RED](https://nodered.org/)
 **Download plugin and install**
 
     wget -O /tmp/node-red.json https://raw.githubusercontent.com/tprelog/iocage-node-red/11.3-RELEASE/node-red.json
-    sudo iocage fetch -P /tmp/node-red.json --branch '11.3-RELEASE""
+    sudo iocage fetch -P /tmp/node-red.json --branch '11.3-RELEASE'
 
 
 ##### To see a list of jails as well as their ip address
