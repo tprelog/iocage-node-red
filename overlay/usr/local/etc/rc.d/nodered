@@ -1,28 +1,33 @@
 #!/bin/sh
-
+#
 # PROVIDE: node-red
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
-#
-# nodered_enable:     Set to YES to enable the Node-RED service.
-#			Default: NO
+
+# nodered_enable: Set to YES to enable the Node-RED service.
+#		Default: NO
 # nodered_user:	The user account used to run the Node-RED daemon.
-#			This is optional, however do not specifically set this to an
-#			empty string as this will cause the daemon to run as root.
-#			Default: nodered
-# nodered_group:      The group account used to run the Node-RED daemon.
-#			This is optional, however do not specifically set this to an
-#			empty string as this will cause the daemon to run with group wheel.
-#			Default:  nodered
-# nodered_dir:        Use this directory for the user Node-RED daemon
-#			Default:  "/usr/home/nodered"
+#		This is optional, however do not specifically set this to an
+#		empty string as this will cause the daemon to run as root.
+#		Default: "nodered"
+# nodered_group: The group account used to run the Node-RED daemon.
+#		This is optional, however do not specifically set this to an
+#		empty string as this will cause the daemon to run with group wheel.
+#		Default: "nodered"
+# nodered_dir: Use this directory for the user Node-RED daemon
+#		Default: "/usr/home/nodered"
 #
-#
-# Copy this file to '/usr/local/etc/rc.d/nodered'
-#
-# chmod +x /usr/local/etc/rc.d/nodered
-# sysrc nodered_enable=yes                # to enable
-# service nodered start                   # to start
+# nodered_moss: Set and enable `node-red-pi --max-old-space-size`.
+#       Default: DISABLED
+#       Set 'max-old-space-size=512':  `sysrc nodered_moss=512`
+#       Disable 'max-old-space-size':  `sysrc -x nodered_moss`
+
+# -------------------------------------------------------
+# Copy this file to '/usr/local/etc/rc.d/nodered' 
+# `chmod +x /usr/local/etc/rc.d/nodered`
+# `sysrc nodered_enable=yes`
+# `service nodered start`
+# -------------------------------------------------------
 
 . /etc/rc.subr
 name="nodered"
@@ -38,40 +43,39 @@ load_rc_config ${name}
 : ${nodered_group:="nodered"}
 : ${nodered_dir:="/usr/home/nodered"}
 : ${nodered_python:="/usr/local/bin/python2.7"}
+: ${nodered_moss:="0"}
 
 command="/usr/sbin/daemon"
+nr="/usr/local/bin/node-red"
 
 start_precmd=${name}_precmd
-nodered_precmd()
-{
-  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} /usr/local/bin/node-red -u ${nodered_dir} ${rc_flags}"
+nodered_precmd() {
+  
+  if [ ${nodered_moss} -gt 0 ]; then
+    nrpi="bash /usr/local/bin/node-red-pi"
+    nr="${nrpi} --max-old-space-size=${nodered_moss}"
+    echo "max-old-space-size=${nodered_moss}"
+  fi
+  
+  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${nr} -u ${nodered_dir} ${rc_flags}"
   
   export HOME="${nodered_dir}"
   export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH}"
   export PYTHON="${nodered_python}"
-      
-    if [ ! -e "${pidfile_child}" ]; then
-            install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile_child}";
-    fi
-
-    if [ ! -e "${pidfile}" ]; then
-            install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile}";
-    fi
-
-    if [ ! -e "${logfile}" ]; then
-        install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${logfile}";
-    fi
-    
-    if [ ! -d "${nodered_dir}" ]; then
-        install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${nodered_dir}";
-    fi
+  
+  [ ! -e "${pidfile_child}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile_child}"
+  [ ! -e "${pidfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile}"
+  [ ! -e "${logfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${logfile}"
+  
+  if [ ! -d "${nodered_dir}" ]; then
+    install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${nodered_dir}";
+  fi
 }
 
 stop_postcmd=${name}_postcmd
-nodered_postcmd()
-{
-    rm -f -- "${pidfile}"
-    rm -f -- "${pidfile_child}"
+nodered_postcmd() {
+  rm -f -- "${pidfile}"
+  rm -f -- "${pidfile_child}"
 }
 
 run_rc_command "$1"
