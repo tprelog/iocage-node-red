@@ -1,25 +1,51 @@
 # iocage-node-red
-Artifact file(s) for [Node-RED](https://nodered.org/)
+Artifact file(s) for [Node-RED][1]
 
-#### Node-RED plugin for FreeNAS 11
+### This is a [FreeNAS Community Plugin][2]
 
- - This branch is for FreeNAS 11.2
+**The current release is intended for FreeNAS 11.3 but should work with FreeNAS 11.2-U7 or later**
 
-**Download plugin and install**
+- This will create an 11.3-RELEASE iocage-jail for [Node-RED][1]
 
-    wget -O /tmp/node-red.json https://raw.githubusercontent.com/tprelog/iocage-node-red/11.2-RELEASE/node-red.json
-    sudo iocage fetch -P dhcp=on vnet=on bpf=yes -n /tmp/node-red.json --branch '11.2-RELEASE'
+NAME | SERVICE | PORT | USER | CONFIG DIR
+:---: | :---: | :---: | :---: | :---: |
+Node-RED | nodered | 1880 | nodered |  /var/db/nodered
 
-###### To see a list of jails as well as their ip address
 
-    sudo iocage list -l
-    +-----+-------------+------+-------+----------+-----------------+----------------------+-----+----------+
-    | JID |      NAME   | BOOT | STATE |   TYPE   |     RELEASE     |         IP4          | IP6 | TEMPLATE |
-    +=====+=============+======+=======+==========+=================+======================+=====+==========+
-    |  1  | node-red    |  on  |  up   | jail     | 11.2-RELEASE-p4 | epair0b|192.0.1.142  | -   | -        |
-    +-----+-------------+------+-------+----------+-----------------+----------------------+-----+----------+
-    |  2  | node-red_2  |  on  |  up   | pluginv2 | 11.2-RELEASE-p4 | epair0b|192.0.1.104  | -   | -        |
-    +-----+-------------+------+-------+----------+-----------------+----------------------+-----+----------+
+#### Installation
 
-- Tested on FreeNAS-11.2-U1
-- More information about [iocage plugins](https://doc.freenas.org/11.2/plugins.html) and [iocage jails](https://doc.freenas.org/11.2/jails.html) can be found in the [FreeNAS guide](https://doc.freenas.org/11.2/intro.html#introduction)
+**Node-RED is available from the Communtity Plugins page on FreeNAS 11.3**
+
+![img][FreeNAS_plugins]
+
+---
+
+**FreeNAS 11.2-U7**
+<details><summary>Click Here</summary>
+<p>
+
+##### plugin-jail
+
+*The 11.3-RELEASE should work on FreeNAS 11.2-U7 or later*
+
+It is possible to install this plugin on FreeNAS 11.2-U7 using the console.
+
+```bash
+wget -O /tmp/nodered.json https://raw.githubusercontent.com/tprelog/freenas-plugin-index/11.3-RELEASE/nodered.json
+iocage fetch -P dhcp=on vnet=on vnet_default_interface=auto bpf=yes boot=on -n /tmp/nodered.json --branch 11.3-RELEASE
+```
+
+</p>
+</details>
+
+
+---
+
+###### Current artifact files can be found in the [11.3-RELEASE branch][4]
+
+[FreeNAS_plugins]: _img/FreeNAS_nodered.png
+
+[1]: https://nodered.org/
+[2]: https://www.freenas.org/plugins/
+[3]: https://github.com/tprelog/freenas-plugin-index
+[4]: https://github.com/tprelog/iocage-nodered/tree/11.3-RELEASE
