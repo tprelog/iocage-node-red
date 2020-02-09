@@ -8,11 +8,11 @@ export PYTHON="/usr/local/bin/python2.7"
 
 usr_id=1880
 usr_name=nodered
-usr_home=/usr/home/nodered
+usr_home=/var/db/nodered
 
 install -d -g ${usr_id} -o ${usr_id} -m 775 -- ${usr_home}
 pw addgroup -g ${usr_id} -n ${usr_name}
-pw useradd -u ${usr_id} -n ${usr_name} -d ${usr_home} -s /usr/local/bin/bash -w no -c "Daemon for Node-RED"
+pw useradd -u ${usr_id} -n ${usr_name} -d ${usr_home} -s /usr/local/bin/bash -w no
 
 /usr/local/bin/npm cache clean --force
 /usr/local/bin/npm install -g --unsafe-perm node-red
