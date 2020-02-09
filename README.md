@@ -48,4 +48,4 @@ iocage fetch -P dhcp=on vnet=on vnet_default_interface=auto bpf=yes boot=on -n /
 [1]: https://nodered.org/
 [2]: https://www.freenas.org/plugins/
 [3]: https://github.com/tprelog/freenas-plugin-index
-[4]: https://github.com/tprelog/iocage-nodered/tree/11.3-RELEASE
+[4]: https://github.com/tprelog/iocage-node-red/tree/11.3-RELEASE
