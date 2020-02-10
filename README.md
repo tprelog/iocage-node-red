@@ -14,7 +14,7 @@ Node-RED | nodered | 1880 | nodered |  /var/db/nodered
 
 #### Installation
 
-**Node-RED is available from the Communtity Plugins page on FreeNAS 11.3**
+**Node-RED is available from the Community Plugins page on FreeNAS 11.3**
 
 ![img][FreeNAS_plugins]
 
