@@ -1,0 +1,20 @@
+
+ _ _  ___  ___  ___  ___  ___  ___ 
+| \ || . || . \| __>| . \| __>| . \
+|   || | || | || _> |   /| _> | | |
+|_\_|`___'|___/|___>|_\_\|___>|___/
+                                   
+
+- Plugin directory for Node-RED
+    /usr/home/nodered
+
+- Plugin default Node-RED settings
+    /usr/home/nodered/settings.js
+
+- Logfile for Node-RED daemon
+    /var/log/nodered_daemon.log
+
+- Control the node-red daemon
+    service nodered [start|stop|status|restart]
+
+--------------------------------------------------------
