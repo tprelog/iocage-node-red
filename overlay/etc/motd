@@ -6,10 +6,10 @@
                                    
 
 - Plugin directory for Node-RED
-    /usr/home/nodered
+    /var/db/nodered
 
 - Plugin default Node-RED settings
-    /usr/home/nodered/settings.js
+    /var/db/nodered/settings.js
 
 - Logfile for Node-RED daemon
     /var/log/nodered_daemon.log
