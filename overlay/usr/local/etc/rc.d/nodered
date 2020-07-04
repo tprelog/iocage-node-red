@@ -49,24 +49,28 @@ load_rc_config ${name}
 : ${nodered_python:="/usr/local/bin/python2.7"}
 : ${nodered_moss:="0"}
 
+load_rc_config ${name}
+
+export HOME="${nodered_config_dir}"
+export PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
+export PYTHON="${nodered_python}"
+
 command="/usr/sbin/daemon"
 nr="/usr/local/bin/node-red"
 
 start_precmd=${name}_precmd
 nodered_precmd() {
+
+  NR="/usr/local/bin/node-red"
   
   if [ ${nodered_moss} -gt 0 ]; then
-    nrpi="bash /usr/local/bin/node-red-pi"
-    nr="${nrpi} --max-old-space-size=${nodered_moss}"
+    local _nrpi_="bash /usr/local/bin/node-red-pi"
+    NR="${_nrpi_} --max-old-space-size=${nodered_moss}"
     echo "max-old-space-size=${nodered_moss}"
   fi
   
-  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${nr} -u ${nodered_config_dir} ${rc_flags}"
-  
-  export HOME="${nodered_config_dir}"
-  export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH}"
-  export PYTHON="${nodered_python}"
-  
+  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${NR} -u ${nodered_config_dir} ${rc_flags}"
+    
   [ ! -e "${pidfile_child}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile_child}"
   [ ! -e "${pidfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile}"
   [ ! -e "${logfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${logfile}"
