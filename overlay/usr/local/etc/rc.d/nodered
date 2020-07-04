@@ -3,24 +3,28 @@
 # PROVIDE: node-red
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
-
+#
 # nodered_enable: Set to YES to enable the Node-RED service.
-#		Default: NO
+#	    Default: NO
+#
 # nodered_user:	The user account used to run the Node-RED daemon.
-#		This is optional, however do not specifically set this to an
-#		empty string as this will cause the daemon to run as root.
-#		Default: "nodered"
+#     This is optional, however do not specifically set this to an
+#     empty string as this will cause the daemon to run as root.
+#     Default: "nodered"
+#
 # nodered_group: The group account used to run the Node-RED daemon.
-#		This is optional, however do not specifically set this to an
-#		empty string as this will cause the daemon to run with group wheel.
-#		Default: "nodered"
+#     This is optional, however do not specifically set this to an
+#     empty string as this will cause the daemon to run with group wheel.
+#     Default: "nodered"
+#
 # nodered_config_dir: Use this directory for the user Node-RED daemon
-#		Default: "/var/db/nodered"
+#	    Default: "/var/db/nodered"
+#
 #
 # nodered_moss: Set and enable `node-red-pi --max-old-space-size`.
-#       Default: DISABLED
-#       Set 'max-old-space-size=512':  `sysrc nodered_moss=512`
-#       Disable 'max-old-space-size':  `sysrc -x nodered_moss`
+#     Default: DISABLED
+#     Set 'max-old-space-size=512':  `sysrc nodered_moss=512`
+#     Disable 'max-old-space-size':  `sysrc -x nodered_moss`
 
 # -------------------------------------------------------
 # Copy this file to '/usr/local/etc/rc.d/nodered' 
