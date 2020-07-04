@@ -41,7 +41,6 @@ pidfile_child="/var/run/${name}.pid"
 pidfile="/var/run/${name}_daemon.pid"
 logfile="/var/log/${name}_daemon.log"
 
-load_rc_config ${name}
 : ${nodered_enable:="NO"}
 : ${nodered_user:="nodered"}
 : ${nodered_group:="nodered"}
@@ -56,7 +55,15 @@ export PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
 export PYTHON="${nodered_python}"
 
 command="/usr/sbin/daemon"
-nr="/usr/local/bin/node-red"
+extra_commands="upgrade"
+
+upgrade_cmd="${name}_upgrade"
+nodered_upgrade() {
+  run_rc_command stop 2>/dev/null
+  /usr/local/bin/npm cache clean --force
+  npm install -g --unsafe-perm node-red
+  [ $? == 0 ] run_rc_command start
+}
 
 start_precmd=${name}_precmd
 nodered_precmd() {
