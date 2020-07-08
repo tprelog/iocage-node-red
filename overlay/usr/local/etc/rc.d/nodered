@@ -64,10 +64,10 @@ extra_commands="upgrade"
 
 upgrade_cmd="${name}_upgrade"
 nodered_upgrade() {
-  run_rc_command stop 2>/dev/null
-  /usr/local/bin/npm cache clean --force
-  npm install -g --unsafe-perm node-red
-  [ $? == 0 ] run_rc_command start
+  run_rc_command stop 2>/dev/null; _rcstop_=$?
+  #/usr/local/bin/npm cache clean --force
+  /usr/local/bin/npm install -g --unsafe-perm node-red
+  [ $? == 0 ] && [ ${_rcstop_} == 0 ] && run_rc_command start
 }
 
 start_precmd=${name}_precmd
