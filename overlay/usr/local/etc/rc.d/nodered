@@ -47,8 +47,13 @@ logfile="/var/log/${name}_daemon.log"
 : ${nodered_config_dir:="/var/db/nodered"}
 : ${nodered_python:="/usr/local/bin/python2.7"}
 : ${nodered_moss:="0"}
+: ${nodered_rc_debug:="OFF"}
 
 load_rc_config ${name}
+
+if checkyesno nodered_rc_debug; then
+  rc_debug="${nodered_rc_debug}"
+fi
 
 export HOME="${nodered_config_dir}"
 export PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
