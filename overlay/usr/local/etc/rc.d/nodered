@@ -83,18 +83,19 @@ nodered_precmd() {
   
   rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${NR} -u ${nodered_config_dir} ${rc_flags}"
     
-  [ ! -e "${pidfile_child}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile_child}"
-  [ ! -e "${pidfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile}"
-  [ ! -e "${logfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${logfile}"
+  [ ! -e "${pidfile_child}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${pidfile_child}"
+  [ ! -e "${pidfile}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${pidfile}"
+  [ ! -e "${logfile}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${logfile}"
   
   if [ ! -d "${nodered_config_dir}" ]; then
-    install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${nodered_config_dir}";
+    install -g "${nodered_group}" -m 775 -o "${nodered_user}" -- /dev/null "${nodered_config_dir}";
+  elif [ `stat -f '%Su' "${nodered_config_dir}"` != ${nodered_user} ]; then
+    chown -R "${nodered_user}":"${nodered_group}" "${nodered_config_dir}"
   fi
 }
 
 stop_postcmd=${name}_postcmd
 nodered_postcmd() {
-  rm -f -- "${pidfile}"
   rm -f -- "${pidfile_child}"
 }
 
