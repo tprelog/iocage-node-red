@@ -1,26 +1,29 @@
 #!/bin/sh
 #
-# PROVIDE: node-red
+# PROVIDE: nodered
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
-
+#
 # nodered_enable: Set to YES to enable the Node-RED service.
-#		Default: NO
+#	    Default: NO
+#
 # nodered_user:	The user account used to run the Node-RED daemon.
-#		This is optional, however do not specifically set this to an
-#		empty string as this will cause the daemon to run as root.
-#		Default: "nodered"
+#     This is optional, however do not specifically set this to an
+#     empty string as this will cause the daemon to run as root.
+#     Default: "nodered"
+#
 # nodered_group: The group account used to run the Node-RED daemon.
-#		This is optional, however do not specifically set this to an
-#		empty string as this will cause the daemon to run with group wheel.
-#		Default: "nodered"
+#     This is optional, however do not specifically set this to an
+#     empty string as this will cause the daemon to run with group wheel.
+#     Default: "nodered"
+#
 # nodered_config_dir: Use this directory for the user Node-RED daemon
-#		Default: "/var/db/nodered"
+#	    Default: "/var/db/nodered"
 #
 # nodered_moss: Set and enable `node-red-pi --max-old-space-size`.
-#       Default: DISABLED
-#       Set 'max-old-space-size=512':  `sysrc nodered_moss=512`
-#       Disable 'max-old-space-size':  `sysrc -x nodered_moss`
+#     Default: DISABLED
+#     Set 'max-old-space-size=512':  `sysrc nodered_moss=512`
+#     Disable 'max-old-space-size':  `sysrc -x nodered_moss`
 
 # -------------------------------------------------------
 # Copy this file to '/usr/local/etc/rc.d/nodered' 
@@ -37,44 +40,67 @@ pidfile_child="/var/run/${name}.pid"
 pidfile="/var/run/${name}_daemon.pid"
 logfile="/var/log/${name}_daemon.log"
 
-load_rc_config ${name}
 : ${nodered_enable:="NO"}
 : ${nodered_user:="nodered"}
 : ${nodered_group:="nodered"}
 : ${nodered_config_dir:="/var/db/nodered"}
 : ${nodered_python:="/usr/local/bin/python2.7"}
 : ${nodered_moss:="0"}
+: ${nodered_rc_debug:="OFF"}
+
+load_rc_config ${name}
+
+if checkyesno nodered_rc_debug; then
+  rc_debug="${nodered_rc_debug}"
+fi
+
+export HOME="${nodered_config_dir}"
+export PATH="${PATH}:/usr/local/sbin:/usr/local/bin"
+export PYTHON="${nodered_python}"
 
 command="/usr/sbin/daemon"
-nr="/usr/local/bin/node-red"
+extra_commands="upgrade"
+
+upgrade_cmd="${name}_upgrade"
+nodered_upgrade() {
+  run_rc_command stop 2>/dev/null; _rcstop_=$?
+  #/usr/local/bin/npm cache clean --force
+  /usr/local/bin/npm install -g --unsafe-perm node-red
+  [ $? == 0 ] && [ ${_rcstop_} == 0 ] && run_rc_command start
+}
 
 start_precmd=${name}_precmd
 nodered_precmd() {
+
+  NR="/usr/local/bin/node-red"
   
   if [ ${nodered_moss} -gt 0 ]; then
-    nrpi="bash /usr/local/bin/node-red-pi"
-    nr="${nrpi} --max-old-space-size=${nodered_moss}"
+    local _nrpi_="bash /usr/local/bin/node-red-pi"
+    NR="${_nrpi_} --max-old-space-size=${nodered_moss}"
     echo "max-old-space-size=${nodered_moss}"
   fi
   
-  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${nr} -u ${nodered_config_dir} ${rc_flags}"
-  
-  export HOME="${nodered_config_dir}"
-  export PATH="/sbin:/bin:/usr/sbin:/usr/bin:/usr/local/sbin:/usr/local/bin:${PATH}"
-  export PYTHON="${nodered_python}"
-  
-  [ ! -e "${pidfile_child}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile_child}"
-  [ ! -e "${pidfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${pidfile}"
-  [ ! -e "${logfile}" ] && install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${logfile}"
+  rc_flags="-f -o ${logfile} -P ${pidfile} -p ${pidfile_child} ${NR} -u ${nodered_config_dir} ${rc_flags}"
+    
+  [ ! -e "${pidfile_child}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${pidfile_child}"
+  [ ! -e "${pidfile}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${pidfile}"
+  [ ! -e "${logfile}" ] && install -g "${nodered_group}" -o "${nodered_user}" -- /dev/null "${logfile}"
   
   if [ ! -d "${nodered_config_dir}" ]; then
-    install -g ${nodered_group} -o ${nodered_user} -- /dev/null "${nodered_config_dir}";
+    install -g "${nodered_group}" -m 775 -o "${nodered_user}" -- /dev/null "${nodered_config_dir}";
+  elif [ `stat -f '%Su' "${nodered_config_dir}"` != ${nodered_user} ]; then
+    chown -R "${nodered_user}":"${nodered_group}" "${nodered_config_dir}"
   fi
+}
+
+start_postcmd=${name}_poststart
+nodered_poststart() {
+  sleep 1
+  run_rc_command status
 }
 
 stop_postcmd=${name}_postcmd
 nodered_postcmd() {
-  rm -f -- "${pidfile}"
   rm -f -- "${pidfile_child}"
 }
 
