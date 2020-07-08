@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# PROVIDE: node-red
+# PROVIDE: nodered
 # REQUIRE: LOGIN
 # KEYWORD: shutdown
 #
@@ -19,7 +19,6 @@
 #
 # nodered_config_dir: Use this directory for the user Node-RED daemon
 #	    Default: "/var/db/nodered"
-#
 #
 # nodered_moss: Set and enable `node-red-pi --max-old-space-size`.
 #     Default: DISABLED
@@ -92,6 +91,12 @@ nodered_precmd() {
   elif [ `stat -f '%Su' "${nodered_config_dir}"` != ${nodered_user} ]; then
     chown -R "${nodered_user}":"${nodered_group}" "${nodered_config_dir}"
   fi
+}
+
+start_postcmd=${name}_poststart
+nodered_poststart() {
+  sleep 1
+  run_rc_command status
 }
 
 stop_postcmd=${name}_postcmd
