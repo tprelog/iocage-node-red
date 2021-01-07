@@ -15,6 +15,6 @@
     /var/log/nodered_daemon.log
 
 - Control the node-red daemon
-    service nodered [start|stop|status|restart]
+    service nodered [start|stop|status|restart|upgrade]
 
 --------------------------------------------------------
